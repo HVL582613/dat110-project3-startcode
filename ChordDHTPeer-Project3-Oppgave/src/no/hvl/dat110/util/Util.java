@@ -52,20 +52,38 @@ public class Util {
 //		}
 //		
 //		return lower.compareTo(id) <= 0 && id.compareTo(upper) <= 0;
+//		boolean cond = false;
+//		
+//		BigInteger addressSize = Hash.addressSize();
+//		BigInteger newUpper = upper;
+//		if(lower.compareTo(upper) ==1) {
+//			newUpper = upper.add(addressSize);
+//			
+//			if((id.compareTo(new BigInteger("0")) == 1 || id.compareTo(new BigInteger("0")) == 0) && ((id.compareTo(upper) == -1 || id.compareTo(upper) == 0))) {
+//				id = id.add(addressSize);
+//			}
+//		}
+//		upper = newUpper;
+//		cond = ((id.compareTo(lower) == 1 || id.compareTo(lower) == 0 && (id.compareTo(upper) == -1 || id.compareTo(upper) == 0)));
+//		
+//		return cond;
+//	}
 		boolean cond = false;
-		
+
 		BigInteger addressSize = Hash.addressSize();
 		BigInteger newUpper = upper;
-		if(lower.compareTo(upper) ==1) {
+		if (lower.compareTo(upper) == 1) {
 			newUpper = upper.add(addressSize);
-			
-			if((id.compareTo(new BigInteger("0")) == 1 || id.compareTo(new BigInteger("0")) == 0) && ((id.compareTo(upper) == -1 || id.compareTo(upper) == 0))) {
+
+			if ((id.compareTo(new BigInteger("0")) == 1 || id.compareTo(new BigInteger("0")) == 0)
+					&& ((id.compareTo(upper) == -1 || id.compareTo(upper) == 0))) {
 				id = id.add(addressSize);
 			}
 		}
 		upper = newUpper;
-		cond = ((id.compareTo(lower) == 1 || id.compareTo(lower) == 0 && (id.compareTo(upper) == -1 || id.compareTo(upper) == 0)));
-		
+		cond = ((id.compareTo(lower) == 1 || id.compareTo(lower) == 0)
+				&& (id.compareTo(upper) == -1 || id.compareTo(upper) == 0));
+
 		return cond;
 	}
 	

@@ -9,6 +9,7 @@ package no.hvl.dat110.util;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -20,29 +21,41 @@ public class Hash {
 		
 		// Task: Hash a given string using MD5 and return the result as a BigInteger.
 		
-		// we use MD5 with 128 bits digest
+//		// we use MD5 with 128 bits digest
+//		try {
+//			MessageDigest md = MessageDigest.getInstance("MD5");
+//		
+//		// compute the hash of the input 'entity'
+//			byte[] hash = md.digest(entity.getBytes());
+//		
+//		// convert the hash into hex format
+//			
+//			String hex = toHex(hash);
+//		
+//		// convert the hex into BigInteger
+//			
+//			hashint = new BigInteger(hex, 16);
+//			
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		// return the BigInteger
+//		
+//		return hashint;
+//	}
+		byte[] byteEntity = entity.getBytes(StandardCharsets.UTF_8);
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
-		
-		// compute the hash of the input 'entity'
-			byte[] hash = md.digest(entity.getBytes());
-		
-		// convert the hash into hex format
-			
-			String hex = toHex(hash);
-		
-		// convert the hex into BigInteger
-			
-			hashint = new BigInteger(hex, 16);
-			
+			byte[] hashEntity = md.digest(byteEntity);
+			hashint = new BigInteger(toHex(hashEntity), 16);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		
-		// return the BigInteger
-		
+
 		return hashint;
 	}
+	
 	
 	public static BigInteger addressSize() {
 		
@@ -53,17 +66,19 @@ public class Hash {
 		// bitSize() method does this
 		
 		// compute the number of bits = digest length * 8
-			int bits = bitSize();
+//			int bits = bitSize();
+//		
+//		// compute the address size = 2 ^ number of bits
+//			BigInteger exp = new BigInteger("2");
+//			BigInteger addressSize = exp.pow(bits);
+//			
+//			
+//		
+//		// return the address size
+//		
+//		return addressSize;
 		
-		// compute the address size = 2 ^ number of bits
-			BigInteger exp = new BigInteger("2");
-			BigInteger addressSize = exp.pow(bits);
-			
-			
-		
-		// return the address size
-		
-		return addressSize;
+		return BigInteger.valueOf(2).pow(bitSize());
 	}
 	
 	public static int bitSize() {
