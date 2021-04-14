@@ -92,16 +92,30 @@ public class FileManager {
     	// Task2: assign a replica as the primary for this file. Hint, see the slide (project 3) on Canvas
     	
     	// create replicas of the filename
-    	
+    	createReplicaFiles();
+    	Random random = new Random();
+    	int index = random.nextInt(Util.numReplicas - 1);
 		// iterate over the replicas
     	
     	// for each replica, find its successor by performing findSuccessor(replica)
     	
+    	for(BigInteger key : replicafiles) {
+    
+    		NodeInterface successor = chordnode.findSuccessor(key);
     	// call the addKey on the successor and add the replica
-    	
+    		successor.addKey(key);
     	// call the saveFileContent() on the successor
-    	
+    		if(counter == index) {
+    			successor.saveFileContent(filename, key, bytesOfFile, true);
+    		} else {
+    			successor.saveFileContent(filename, key, bytesOfFile, false);
+    		}
+    		System.out.println(counter);
+    		System.out.println(successor.getNodeID());
+    		System.out.println(filename + " - " + key.toString() + " - " + bytesOfFile);
     	// increment counter
+    	
+    	}
     	
     		
 		return counter;
