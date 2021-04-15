@@ -50,32 +50,35 @@ public class MutualExclusion {
 		System.out.println(node.nodename + " wants to access CS");
 		
 		// clear the queueack before requesting for votes
-		
+		queueack.clear();
 		// clear the mutexqueue
-		
+		mutexqueue.clear();
 		// increment clock
-		
+		clock.increment();
 		// adjust the clock on the message, by calling the setClock on the message
-				
+		message.setClock(clock.getClock());
 		// wants to access resource - set the appropriate lock variable
-	
+		WANTS_TO_ENTER_CS = true;
 		
 		// start MutualExclusion algorithm
 		
 		// first, removeDuplicatePeersBeforeVoting. A peer can contain 2 replicas of a file. This peer will appear twice
-
+		List<Message> msg = removeDuplicatePeersBeforeVoting();
 		// multicast the message to activenodes (hint: use multicastMessage)
-		
+		multicastMessage(message, msg);
 		// check that all replicas have replied (permission)
+		if(areAllMessagesReturned(msg.size())) {
+			
 		
 		// if yes, acquireLock
-		
+			acquireLock();
 		// node.broadcastUpdatetoPeers
-		
+			node.broadcastUpdatetoPeers(updates);
 		// clear the mutexqueue
-		
+			mutexqueue.clear();
 		// return permission
-		
+			return true;
+		}
 		
 		return false;
 	}
@@ -84,25 +87,45 @@ public class MutualExclusion {
 	private void multicastMessage(Message message, List<Message> activenodes) throws RemoteException {
 		
 		// iterate over the activenodes
-		
+		for(Message msg : activenodes) {
+			
 		// obtain a stub for each node from the registry
-		
+			NodeInterface stub = Util.getProcessStub(msg.getNodeIP(), msg.getPort());
 		// call onMutexRequestReceived()
-		
+			stub.onMutexRequestReceived(message);
+			
+		}
 	}
 	
 	public void onMutexRequestReceived(Message message) throws RemoteException {
 		
 		// increment the local clock
+		clock.increment();
 		
 		// if message is from self, acknowledge, and call onMutexAcknowledgementReceived()
+		
+		if(message.getNodeID().equals(node.getNodeName())) {
+			message.setAcknowledged(true);
+			node.onMutexAcknowledgementReceived(message);
+		}
 			
 		int caseid = -1;
 		
 		// write if statement to transition to the correct caseid
+		
 		// caseid=0: Receiver is not accessing shared resource and does not want to (send OK to sender)
+		
+		if(!CS_BUSY && !WANTS_TO_ENTER_CS) {
+			caseid = 0;
 		// caseid=1: Receiver already has access to the resource (dont reply but queue the request)
+			
+		} else if(CS_BUSY) {
+			caseid = 1;
 		// caseid=2: Receiver wants to access resource but is yet to - compare own message clock to received message's clock
+			
+		} else if (WANTS_TO_ENTER_CS) {
+			caseid = 2;
+		}
 		
 		// check for decision
 		doDecisionAlgorithm(message, mutexqueue, caseid);
