@@ -67,7 +67,8 @@ public class MutualExclusion {
 		// multicast the message to activenodes (hint: use multicastMessage)
 		multicastMessage(message, msg);
 		// check that all replicas have replied (permission)
-		if(areAllMessagesReturned(Util.numReplicas)) {
+		boolean permission = areAllMessagesReturned(Util.numReplicas);
+		if(permission) {
 			
 		
 		// if yes, acquireLock
@@ -76,11 +77,10 @@ public class MutualExclusion {
 			node.broadcastUpdatetoPeers(updates);
 		// clear the mutexqueue
 			mutexqueue.clear();
-		// return permission
-			return true;
+			
 		}
-		
-		return false;
+		// return permission
+		return permission;
 	}
 	
 	// multicast message to other processes including self
