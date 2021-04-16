@@ -99,22 +99,22 @@ public class FileManager {
     	
     	// for each replica, find its successor by performing findSuccessor(replica)
     	
-    	for(BigInteger key : replicafiles) {
+    	for(BigInteger replica : replicafiles) {
     
-    		NodeInterface successor = chordnode.findSuccessor(key);
+    		NodeInterface successor = chordnode.findSuccessor(replica);
     	// call the addKey on the successor and add the replica
-    		successor.addKey(key);
+    		successor.addKey(replica);
     	// call the saveFileContent() on the successor
     		if(counter == index) {
-    			successor.saveFileContent(filename, key, bytesOfFile, true);
+    			successor.saveFileContent(filename, replica, bytesOfFile, true);
     		} else {
-    			successor.saveFileContent(filename, key, bytesOfFile, false);
+    			successor.saveFileContent(filename, replica, bytesOfFile, false);
     		}
     		System.out.println(counter);
     		System.out.println(successor.getNodeID());
-    		System.out.println(filename + " - " + key.toString() + " - " + bytesOfFile);
+    		System.out.println(filename + " - " + replica.toString() + " - " + bytesOfFile);
     	// increment counter
-    	
+    		counter++;
     	}
     	
     		
@@ -139,12 +139,12 @@ public class FileManager {
 		// it means, iterate over the replicas of the file
 		
 		// for each replica, do findSuccessor(replica) that returns successor s.
-		for(BigInteger key : replicafiles) {
+		for(BigInteger replica : replicafiles) {
 			
 		// get the metadata (Message) of the replica from the successor, s (i.e. active peer) of the file
-		NodeInterface s = chordnode.findSuccessor(key);
+			NodeInterface s = chordnode.findSuccessor(replica);
 		// save the metadata in the set succinfo.
-		succinfo.add(s.getFilesMetadata(key));
+			succinfo.add(s.getFilesMetadata(replica));
 		}
 		
 		this.activeNodesforFile = succinfo;
