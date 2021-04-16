@@ -100,7 +100,7 @@ public class MutualExclusion {
 	public void onMutexRequestReceived(Message message) throws RemoteException {
 		
 		// increment the local clock
-		//clock.increment();
+		clock.increment();
 		
 		// if message is from self, acknowledge, and call onMutexAcknowledgementReceived()
 		
