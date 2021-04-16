@@ -67,7 +67,7 @@ public class MutualExclusion {
 		// multicast the message to activenodes (hint: use multicastMessage)
 		multicastMessage(message, msg);
 		// check that all replicas have replied (permission)
-		if(areAllMessagesReturned(msg.size())) {
+		if(areAllMessagesReturned(Util.numReplicas)) {
 			
 		
 		// if yes, acquireLock
